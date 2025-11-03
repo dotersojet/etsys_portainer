@@ -3,7 +3,7 @@
     "templates": [{
             "type": 2,
             "title": "PortaBI",
-            "description": "11111  A user-friendly business intelligence tool, analyzing live data and reporting it all in a meaningful way.",
+            "description": "222222  A user-friendly business intelligence tool, analyzing live data and reporting it all in a meaningful way.",
             "note": "Please fill the fields below before installing the application.",
             "categories": [
                 "Data Analyze"
@@ -11,7 +11,7 @@
             "platform": "linux",
             "logo": "https://git.portaone.com:29999/public/portainer/raw/branch/master/porta_default_app_logo.png",
             "repository": {
-                "url": "https://github.com/dotersojet/etsys_portainer",
+                "url": "https://github.com/dotersojet/etsys_portainer2",
                 "stackfile": "prod/app/PortaBI/docker-stack.yml"
             },
             "env": [
