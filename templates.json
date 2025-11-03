@@ -114,7 +114,7 @@
             "platform": "linux",
             "logo": "https://git.portaone.com:29999/public/portainer/raw/branch/master/porta_default_app_logo.png",
             "repository": {
-                "url": "https://github.com/dotersojet/etsys_portainer_TEST",
+                "url": "https://github.com/dotersojet/etsys_portainer",
                 "stackfile": "prod/app/BALogsUIOpenSearch/docker-stack.yml"
             },
             "env": [
