@@ -1,0 +1,151 @@
+version: '3.8'
+
+services:
+  nginx-proxy:
+    image: registry.portaone.com/apiv2/nginx-proxy:1.6.4-alpine
+    ports:
+      - target: 80
+        published: 8099
+        mode: host
+    environment:
+      - DEFAULT_HOST=apigw-service.local
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /tmp/docker.sock
+        read_only: true
+      - type: bind
+        source: /etc/porta-one
+        target: /porta_etc
+        read_only: true
+    command:
+      - sh
+      - -c
+      - |
+          if [ -r '/porta_etc/web/network_internal.conf' ]; then
+            cp /porta_etc/web/network_internal.conf /etc/nginx/network_internal.conf;
+          fi;
+          exec /app/docker-entrypoint.sh forego start -r
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.labels.node_name.PortaAdmin == true]
+    logging:
+      driver: local
+
+  nats:
+    image: registry.portaone.com/apiv2/nats:2.10.24-linux
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.node_name.PortaAdmin == true]
+    logging:
+      driver: local
+
+  apigw:
+    image: registry.portaone.com/apiv2/api-gateway:prod
+    healthcheck:
+      test: ["CMD", "health", "http://localhost/status"]
+      interval: 1m
+      timeout: 30s
+      retries: 10
+    environment:
+      - NATS_DSN=nats://nats:4222
+      - NATS_SUBJECT=apigw
+      - LOG_LEVEL=${LOG_LEVEL}
+      - VIRTUAL_HOST=apigw-service.local
+      - NETWORK_ACCESS=internal
+      - SERVER_TOKENS=off
+    volumes:
+      - type: bind
+        source: /home/porta-admin
+        target: /home/porta-admin
+        read_only: true
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.labels.node_name.PortaAdmin == true]
+    depends_on:
+      - nginx-proxy
+      - nats
+      - adminrpc
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://porta-syslog-web:514"
+        tag: apiv2gw
+
+  adminrpc:
+    image: registry.portaone.com/apiv2/admin-rpc:prod
+    environment:
+      - NATS_ADDR=nats://nats:4222
+      - NATS_SUBJECT=apigw
+      - NATS_GROUP=adminrpc
+      - LOG_LEVEL=${LOG_LEVEL}
+    healthcheck:
+      test: ["CMD", "/app/health.pl"]
+      interval: 30s
+      timeout: 2m
+      retries: 3
+      start_period: 0s
+    volumes:
+      - type: bind
+        source: /home/porta-base
+        target: /home/porta-base
+        read_only: true
+      - type: bind
+        source: /home/porta-admin
+        target: /home/porta-admin
+        read_only: true
+      - type: bind
+        source: /home/porta-billing
+        target: /home/porta-billing
+        read_only: true
+      - type: bind
+        source: /home/porta-cdrmediator
+        target: /home/porta-cdrmediator
+        read_only: true
+      - type: bind
+        source: /usr/lib64
+        target: /usr/lib64
+        read_only: true
+      - type: bind
+        source: /usr/lib/oracle
+        target: /usr/lib/oracle
+        read_only: true
+      - type: bind
+        source: /opt/Percona-Server-80
+        target: /opt/Percona-Server-80
+        read_only: true
+      - type: bind
+        source: /usr/share/perl5
+        target: /usr/share/perl5
+        read_only: true
+      - type: bind
+        source: /usr/bin
+        target: /usr/bin
+        read_only: true
+      - type: bind
+        source: /opt/paymentech
+        target: /opt/paymentech
+      - type: bind
+        source: /var/log/porta-admin
+        target: /var/log/porta-admin
+      - type: bind
+        source: /etc/hosts
+        target: /app/hosts
+        read_only: true
+    deploy:
+      mode: replicated
+      replicas: ${REPLICAS}
+      placement:
+        constraints: [node.labels.node_name.PortaAdmin == true]
+        max_replicas_per_node: 1
+    depends_on:
+      - nats
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://porta-syslog-web:514"
+        tag: apiv2rpc

@@ -1,0 +1,46 @@
+version: '3.3'
+
+services:
+  ba-logs-ui:
+    image: registry.portaone.com/porta-common/ba-logs-ui:prod
+    healthcheck:
+      test: "curl -s -k -I -H \"Accept: application/json\"  https://localhost:3000/api/health | grep -q \"200 OK\" && echo \"Grafana health is OK\" || exit 1"
+      interval: 1m
+      timeout: 30s
+      retries: 10
+    environment:
+      ELASTICSEARCH_URL: ${ELASTICSEARCH_URL}
+      DEFAULT_USER_LOGIN: ${DEFAULT_USER_LOGIN}
+      DEFAULT_USER_PASSWORD: ${DEFAULT_USER_PASSWORD}
+      DOMAIN_NAME_FOR_UI: ${DOMAIN_NAME_FOR_UI}
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.node_name.Elasticsearch == true]
+    logging:
+      driver: local
+  ba-logs-ui-nginx:
+    image: registry.portaone.com/porta-common/ba-logs-ui-nginx:prod
+    healthcheck:
+      test: "perl ssl_handler.pl --ssl-check -ssl-cert-path=/etc/ssl/certs/grafana.crt"
+      interval: 1m
+      timeout: 30s
+      retries: 10
+    environment:
+      CONFIGURATOR_IP: ${CONFIGURATOR_IP}
+      DOMAIN_NAME_FOR_UI: ${DOMAIN_NAME_FOR_UI}
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.node_name.Elasticsearch == true]
+    logging:
+      driver: local
+    ports:
+      - target: 3005
+        published: 3005
+        protocol: tcp
+        mode: ingress
+    depends_on:
+      - "ba-logs-ui"
