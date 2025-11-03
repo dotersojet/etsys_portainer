@@ -44,3 +44,7 @@ services:
         mode: ingress
     depends_on:
       - "ba-logs-ui"
+    volumes:
+      - type: bind
+        source: /var/log/porta-admin/ba_grafana_data
+        target: /var/lib/grafana
