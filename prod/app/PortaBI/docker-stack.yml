@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   bi-agent:
-    image: registry.portaone.com/porta-bi-ext/bi-agent:latest-prod
+    image: registry.portaone.2com/porta-bi-ext/bi-agent:latest-prod
     volumes:
       - type: volume
         source: portabi_data
