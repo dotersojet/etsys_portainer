@@ -20,6 +20,10 @@ services:
         constraints: [node.labels.node_name.Opensearch == true]
     logging:
       driver: local
+    volumes:
+      - type: bind
+        source: /var/log/porta-admin/ba_grafana_data
+        target: /var/lib/grafana
   ba-logs-ui-nginx:
     image: registry.portaone.com/porta-common/ba-logs-ui-nginx:prod
     healthcheck:
@@ -44,7 +48,3 @@ services:
         mode: ingress
     depends_on:
       - "ba-logs-ui"
-    volumes:
-      - type: bind
-        source: /var/log/porta-admin/ba_grafana_data
-        target: /var/lib/grafana
