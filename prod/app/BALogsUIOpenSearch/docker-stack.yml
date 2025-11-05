@@ -48,3 +48,5 @@ services:
         mode: ingress
     depends_on:
       - "ba-logs-ui"
+volumes:
+  ba_logs_grafana_data:
