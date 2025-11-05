@@ -21,8 +21,8 @@ services:
     logging:
       driver: local
     volumes:
-      - type: bind
-        source: /var/log/porta-admin/ba_grafana_data
+      - type: volume
+        source: ba_logs_grafana_data
         target: /var/lib/grafana
   ba-logs-ui-nginx:
     image: registry.portaone.com/porta-common/ba-logs-ui-nginx:prod
