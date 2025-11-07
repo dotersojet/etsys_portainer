@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   ba-logs-exporter:
-    image: registry.portaone.com/porta-common/ba-logs-exporter:prod
+    image: ghcr.io/dotersojet/ba-logs-exporter:prod
     healthcheck:
       test: "cd /app && perl processor_health_check.pl"
       interval: 1m

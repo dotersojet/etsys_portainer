@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   ba-logs-es-supervisor:
-    image: registry.portaone.com/porta-common/ba-logs-es-supervisor:prod
+    image: ghcr.io/dotersojet/ba-logs-es-supervisor:prod
     healthcheck:
       test: "cd /app && perl processor_health_check.pl"
       interval: 1m
