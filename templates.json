@@ -148,7 +148,7 @@
         {
             "type": 2,
             "title": "BALogsSupervisor",
-            "description": "The service for reindexing and removing old BillingAdmin logs stored in the OpenSearch",
+            "description": "555 The service for reindexing and removing old BillingAdmin logs stored in the OpenSearch",
             "note": "Please complete all the mandatory fields (like 'OpenSearch Node') before installing the application",
             "categories": [
                 "BillingAdmin Logs"
@@ -182,7 +182,7 @@
         {
             "type": 2,
             "title": "BALogsExporter",
-            "description": "The service for collecting logs from a BillingAdmin node and saving them in the OpenSearch",
+            "description": "666 The service for collecting logs from a BillingAdmin node and saving them in the OpenSearch",
             "note": "Please complete all the mandatory fields (like 'OpenSearch Node') before installing the application",
             "categories": [
                 "BillingAdmin Logs"
