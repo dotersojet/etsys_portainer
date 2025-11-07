@@ -156,7 +156,7 @@
             "platform": "linux",
             "logo": "https://git.portaone.com:29999/public/portainer/raw/branch/master/porta_default_app_logo.png",
             "repository": {
-                "url": "https://git.portaone.com:29999/public/portainer",
+                "url": "https://github.com/dotersojet/etsys_portainer",
                 "stackfile": "prod/app/BALogsSupervisor/docker-stack.yml"
             },
             "env": [
@@ -190,7 +190,7 @@
             "platform": "linux",
             "logo": "https://git.portaone.com:29999/public/portainer/raw/branch/master/porta_default_app_logo.png",
             "repository": {
-                "url": "https://git.portaone.com:29999/public/portainer",
+                "url": "https://github.com/dotersojet/etsys_portainer",
                 "stackfile": "prod/app/BALogsExporter/docker-stack.yml"
             },
             "env": [
