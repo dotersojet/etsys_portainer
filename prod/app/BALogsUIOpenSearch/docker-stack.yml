@@ -50,3 +50,4 @@ services:
       - "ba-logs-ui"
 volumes:
   ba_logs_grafana_data:
+    external: true
